@@ -1,11 +1,15 @@
 <p align="center">
-  <img src="docs/images/logo.png" alt="肉包 Logo" width="120" height="120">
+  <img src="docs/images/logo.png" alt="肉包 Roubao - AI Android Automation" width="120" height="120">
 </p>
 
 <h1 align="center">肉包 Roubao</h1>
 
 <p align="center">
-  <strong>首款无需电脑的开源 AI 手机自动化助手</strong>
+  <strong>首款无需电脑的开源 AI 手机自动化助手 | AI Phone Automation Assistant</strong>
+</p>
+
+<p align="center">
+  基于视觉语言模型 (VLM) · 原生 Android Kotlin · 多 Agent 协作架构
 </p>
 
 <p align="center">

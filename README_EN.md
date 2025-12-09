@@ -1,11 +1,15 @@
 <p align="center">
-  <img src="docs/images/logo.png" alt="Roubao Logo" width="120" height="120">
+  <img src="docs/images/logo.png" alt="Roubao - AI Android Automation Assistant" width="120" height="120">
 </p>
 
 <h1 align="center">Roubao (肉包)</h1>
 
 <p align="center">
-  <strong>The First Open-Source AI Phone Automation Assistant That Doesn't Need a Computer</strong>
+  <strong>The First Open-Source AI Phone Automation Assistant Without PC</strong>
+</p>
+
+<p align="center">
+  Vision-Language Model (VLM) · Native Android Kotlin · Multi-Agent Architecture
 </p>
 
 <p align="center">
