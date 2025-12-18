@@ -147,11 +147,11 @@ class SettingsManager(context: Context) {
     }
 
     private fun loadSettings(): AppSettings {
-        val themeModeStr = prefs.getString("theme_mode", ThemeMode.DARK.name) ?: ThemeMode.DARK.name
+        val themeModeStr = prefs.getString("theme_mode", ThemeMode.SYSTEM.name) ?: ThemeMode.SYSTEM.name
         val themeMode = try {
             ThemeMode.valueOf(themeModeStr)
         } catch (e: Exception) {
-            ThemeMode.DARK
+            ThemeMode.SYSTEM
         }
 
         // 加载当前选中的服务商
