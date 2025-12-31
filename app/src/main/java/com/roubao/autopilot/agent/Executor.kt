@@ -60,18 +60,18 @@ Text Related:
         append("- type(text): Type text into activated input box. Example: {\"action\": \"type\", \"text\": \"hello\"}\n")
         append("- swipe(coordinate, coordinate2): Swipe from point1 to point2. Example: {\"action\": \"swipe\", \"coordinate\": [x1, y1], \"coordinate2\": [x2, y2]}\n")
         append("- system_button(button): Press Back/Home/Enter. Example: {\"action\": \"system_button\", \"button\": \"Back\"}\n")
-        append("- open_app(text): Open an app by name. ALWAYS use this instead of looking for app icons on screen! Example: {\"action\": \"open_app\", \"text\": \"设置\"}\n")
+        append("- open_app(text): Open an app by name. ALWAYS use this instead of looking for app icons on screen! Example: {\"action\": \"open_app\", \"text\": \"Settings\"}\n")
         if (infoPool.installedApps.isNotEmpty()) {
             append("  Available apps: ${infoPool.installedApps}\n")
         }
         append("- wait(duration): Wait for page loading. Duration in seconds (1-10). Example: {\"action\": \"wait\", \"duration\": 3}\n")
-        append("- take_over(message): Request user to manually complete login/captcha/verification. Example: {\"action\": \"take_over\", \"message\": \"请完成登录验证\"}\n")
+        append("- take_over(message): Request user to manually complete login/captcha/verification. Example: {\"action\": \"take_over\", \"message\": \"Please complete login verification\"}\n")
         append("- answer(text): Answer user's question. Example: {\"action\": \"answer\", \"text\": \"The answer is...\"}\n")
         append("\n")
 
         append("#### Sensitive Operations ####\n")
         append("For payment, password, or privacy-related actions, add 'message' field to request user confirmation:\n")
-        append("Example: {\"action\": \"click\", \"coordinate\": [500, 800], \"message\": \"确认支付 ¥100\"}\n")
+        append("Example: {\"action\": \"click\", \"coordinate\": [500, 800], \"message\": \"Confirm payment $100\"}\n")
         append("The user will see a confirmation dialog and can choose to confirm or cancel.\n")
         append("\n")
 

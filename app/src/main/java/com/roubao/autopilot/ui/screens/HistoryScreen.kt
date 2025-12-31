@@ -52,13 +52,13 @@ fun HistoryScreen(
         ) {
             Column {
                 Text(
-                    text = "执行记录",
+                    text = "History",
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     color = colors.primary
                 )
                 Text(
-                    text = "共 ${records.size} 条记录",
+                    text = "${records.size} records",
                     fontSize = 14.sp,
                     color = colors.textSecondary
                 )
@@ -80,12 +80,12 @@ fun HistoryScreen(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "暂无执行记录",
+                        text = "No execution records",
                         fontSize = 16.sp,
                         color = colors.textSecondary
                     )
                     Text(
-                        text = "执行任务后记录会显示在这里",
+                        text = "Records will appear here after executing tasks",
                         fontSize = 14.sp,
                         color = colors.textHint
                     )
@@ -127,19 +127,19 @@ fun HistoryRecordCard(
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
             containerColor = colors.backgroundCard,
-            title = { Text("删除记录", color = colors.textPrimary) },
-            text = { Text("确定要删除这条执行记录吗？", color = colors.textSecondary) },
+            title = { Text("Delete Record", color = colors.textPrimary) },
+            text = { Text("Are you sure you want to delete this record?", color = colors.textSecondary) },
             confirmButton = {
                 TextButton(onClick = {
                     onDelete()
                     showDeleteDialog = false
                 }) {
-                    Text("删除", color = colors.error)
+                    Text("Delete", color = colors.error)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteDialog = false }) {
-                    Text("取消", color = colors.textSecondary)
+                    Text("Cancel", color = colors.textSecondary)
                 }
             }
         )
@@ -217,12 +217,12 @@ fun HistoryRecordCard(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // 状态标签
+                    // Status label
                     val (statusText, statusColor) = when (record.status) {
-                        ExecutionStatus.COMPLETED -> "已完成" to colors.success
-                        ExecutionStatus.FAILED -> "失败" to colors.error
-                        ExecutionStatus.STOPPED -> "已取消" to colors.warning
-                        ExecutionStatus.RUNNING -> "执行中" to colors.primary
+                        ExecutionStatus.COMPLETED -> "Completed" to colors.success
+                        ExecutionStatus.FAILED -> "Failed" to colors.error
+                        ExecutionStatus.STOPPED -> "Stopped" to colors.warning
+                        ExecutionStatus.RUNNING -> "Running" to colors.primary
                     }
                     Text(
                         text = statusText,
@@ -253,7 +253,7 @@ fun HistoryRecordCard(
                         color = colors.textHint
                     )
                     Text(
-                        text = "${record.steps.size}步",
+                        text = "${record.steps.size} steps",
                         fontSize = 12.sp,
                         color = colors.textHint,
                         maxLines = 1
@@ -278,7 +278,7 @@ fun HistoryRecordCard(
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "删除",
+                    contentDescription = "Delete",
                     tint = colors.textHint
                 )
             }
@@ -322,7 +322,7 @@ fun HistoryDetailScreen(
                 IconButton(onClick = onBack) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "返回",
+                        contentDescription = "Back",
                         tint = colors.textPrimary
                     )
                 }
@@ -342,7 +342,7 @@ fun HistoryDetailScreen(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "任务指令",
+                    text = "Task Instruction",
                     fontSize = 12.sp,
                     color = colors.textHint
                 )
@@ -358,13 +358,13 @@ fun HistoryDetailScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column {
-                        Text("状态", fontSize = 12.sp, color = colors.textHint)
+                        Text("Status", fontSize = 12.sp, color = colors.textHint)
                         Text(
                             text = when (record.status) {
-                                ExecutionStatus.COMPLETED -> "已完成"
-                                ExecutionStatus.FAILED -> "失败"
-                                ExecutionStatus.STOPPED -> "已停止"
-                                ExecutionStatus.RUNNING -> "执行中"
+                                ExecutionStatus.COMPLETED -> "Completed"
+                                ExecutionStatus.FAILED -> "Failed"
+                                ExecutionStatus.STOPPED -> "Stopped"
+                                ExecutionStatus.RUNNING -> "Running"
                             },
                             fontSize = 14.sp,
                             color = when (record.status) {
@@ -376,11 +376,11 @@ fun HistoryDetailScreen(
                         )
                     }
                     Column {
-                        Text("步骤数", fontSize = 12.sp, color = colors.textHint)
+                        Text("Steps", fontSize = 12.sp, color = colors.textHint)
                         Text("${record.steps.size}", fontSize = 14.sp, color = colors.textPrimary)
                     }
                     Column {
-                        Text("耗时", fontSize = 12.sp, color = colors.textHint)
+                        Text("Duration", fontSize = 12.sp, color = colors.textHint)
                         Text(record.formattedDuration, fontSize = 14.sp, color = colors.textPrimary)
                     }
                 }
@@ -408,7 +408,7 @@ fun HistoryDetailScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "执行时间线",
+                    text = "Timeline",
                     fontSize = 14.sp,
                     fontWeight = if (selectedTab == 0) FontWeight.Medium else FontWeight.Normal,
                     color = if (selectedTab == 0) Color.White else colors.textSecondary
@@ -429,7 +429,7 @@ fun HistoryDetailScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "执行日志",
+                    text = "Logs",
                     fontSize = 14.sp,
                     fontWeight = if (selectedTab == 1) FontWeight.Medium else FontWeight.Normal,
                     color = if (selectedTab == 1) Color.White else colors.textSecondary
@@ -451,7 +451,7 @@ fun HistoryDetailScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "暂无执行步骤",
+                            text = "No execution steps",
                             fontSize = 14.sp,
                             color = colors.textHint
                         )
@@ -477,7 +477,7 @@ fun HistoryDetailScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "暂无执行日志",
+                            text = "No execution logs",
                             fontSize = 14.sp,
                             color = colors.textHint
                         )

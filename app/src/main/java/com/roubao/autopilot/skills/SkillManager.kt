@@ -78,40 +78,40 @@ class SkillManager private constructor(
 
         // 构建 Skills 列表描述
         val skillsInfo = buildString {
-            append("可用技能列表：\n")
+            append("Available skills:\n")
             for (skill in registry.getAll()) {
                 val config = skill.config
-                // 只展示有已安装应用的 Skill
+                // Only show skills with installed apps
                 val installedApps = config.relatedApps.filter { registry.isAppInstalled(it.packageName) }
                 if (installedApps.isNotEmpty()) {
                     append("- ID: ${config.id}\n")
-                    append("  名称: ${config.name}\n")
-                    append("  描述: ${config.description}\n")
-                    append("  关键词: ${config.keywords.joinToString(", ")}\n")
-                    append("  可用应用: ${installedApps.joinToString(", ") { it.name }}\n\n")
+                    append("  Name: ${config.name}\n")
+                    append("  Description: ${config.description}\n")
+                    append("  Keywords: ${config.keywords.joinToString(", ")}\n")
+                    append("  Available apps: ${installedApps.joinToString(", ") { it.name }}\n\n")
                 }
             }
         }
 
-        val prompt = """你是一个意图识别助手。根据用户输入，判断最匹配的技能。
+        val prompt = """You are an intent recognition assistant. Based on user input, determine the best matching skill.
 
 $skillsInfo
 
-用户输入: "$query"
+User input: "$query"
 
-请分析用户意图，返回 JSON 格式：
+Analyze the user's intent and return JSON format:
 {
-  "skill_id": "匹配的技能ID，如果没有匹配返回 null",
-  "confidence": 0.0-1.0 的置信度,
-  "reasoning": "简短的匹配理由"
+  "skill_id": "matched skill ID, or null if no match",
+  "confidence": 0.0-1.0 confidence score,
+  "reasoning": "brief explanation of the match"
 }
 
-注意：
-1. 只返回 JSON，不要有其他文字
-2. 如果用户意图明确匹配某个技能，即使措辞不同也要识别
-3. 如果确实没有匹配的技能，skill_id 返回 null
-4. 例如"点个汉堡"、"帮我点外卖"、"想吃炸鸡" 都应该匹配 order_food
-5. "附近好吃的"、"推荐美食" 应该匹配 find_food"""
+Notes:
+1. Only return JSON, no other text
+2. Recognize user intent even if wording differs from keywords
+3. Return null for skill_id if there's truly no match
+4. E.g. "order a burger", "help me order food", "I want fried chicken" should match order_food
+5. "nearby restaurants", "food recommendations" should match find_food"""
 
         return try {
             val result = client.predict(prompt)
@@ -119,7 +119,7 @@ $skillsInfo
                 parseIntentResponse(response)
             }
         } catch (e: Exception) {
-            println("[SkillManager] LLM 意图匹配失败: ${e.message}")
+            println("[SkillManager] LLM intent matching failed: ${e.message}")
             null
         }
     }
@@ -150,7 +150,7 @@ $skillsInfo
                 null
             }
         } catch (e: Exception) {
-            println("[SkillManager] 解析意图响应失败: ${e.message}")
+            println("[SkillManager] Failed to parse intent response: ${e.message}")
             null
         }
     }
@@ -163,19 +163,19 @@ $skillsInfo
         val llmMatch = matchIntentWithLLM(query)
 
         if (llmMatch != null && llmMatch.confidence >= 0.5f) {
-            println("[SkillManager] LLM 匹配: ${llmMatch.skillId} (置信度: ${llmMatch.confidence})")
-            println("[SkillManager] 理由: ${llmMatch.reasoning}")
+            println("[SkillManager] LLM match: ${llmMatch.skillId} (confidence: ${llmMatch.confidence})")
+            println("[SkillManager] Reason: ${llmMatch.reasoning}")
 
             // 获取对应的 Skill 和已安装应用
             val skill = registry.get(llmMatch.skillId)
             if (skill != null) {
-                println("[SkillManager] 找到 Skill: ${skill.config.name}")
-                println("[SkillManager] 关联应用: ${skill.config.relatedApps.map { "${it.name}(${it.packageName})" }}")
+                println("[SkillManager] Found Skill: ${skill.config.name}")
+                println("[SkillManager] Related apps: ${skill.config.relatedApps.map { "${it.name}(${it.packageName})" }}")
 
                 // 检查每个应用的安装状态
                 for (app in skill.config.relatedApps) {
                     val installed = registry.isAppInstalled(app.packageName)
-                    println("[SkillManager] ${app.name}(${app.packageName}): ${if (installed) "已安装" else "未安装"}")
+                    println("[SkillManager] ${app.name}(${app.packageName}): ${if (installed) "installed" else "not installed"}")
                 }
 
                 val availableApp = skill.config.relatedApps
@@ -183,7 +183,7 @@ $skillsInfo
                     .maxByOrNull { it.priority }
 
                 if (availableApp != null) {
-                    println("[SkillManager] 选中应用: ${availableApp.name}")
+                    println("[SkillManager] Selected app: ${availableApp.name}")
                     val params = skill.extractParams(query)
                     return AvailableAppMatch(
                         skill = skill,
@@ -192,15 +192,15 @@ $skillsInfo
                         score = llmMatch.confidence
                     )
                 } else {
-                    println("[SkillManager] 没有可用应用（都未安装）")
+                    println("[SkillManager] No available apps (none installed)")
                 }
             } else {
-                println("[SkillManager] 未找到 Skill: ${llmMatch.skillId}")
+                println("[SkillManager] Skill not found: ${llmMatch.skillId}")
             }
         }
 
         // 如果 LLM 匹配失败，回退到关键词匹配
-        println("[SkillManager] LLM 未匹配或无可用应用，回退到关键词匹配")
+        println("[SkillManager] LLM no match or no available apps, falling back to keyword matching")
         return matchAvailableApp(query)
     }
 
@@ -212,46 +212,46 @@ $skillsInfo
         val match = matchAvailableAppWithLLM(query)
 
         if (match == null) {
-            return "未找到相关技能或可用应用，请使用通用 GUI 自动化完成任务。"
+            return "No matching skill or available app found. Please use general GUI automation to complete the task."
         }
 
         return buildString {
             val config = match.skill.config
             val app = match.app
 
-            append("根据用户意图，已匹配到技能：\n\n")
-            append("【${config.name}】(置信度: ${(match.score * 100).toInt()}%)\n")
-            append("描述: ${config.description}\n\n")
+            append("Based on user intent, matched skill:\n\n")
+            append("[${config.name}] (confidence: ${(match.score * 100).toInt()}%)\n")
+            append("Description: ${config.description}\n\n")
 
-            // 显示提示词约束（如小红书100字限制）
+            // Show prompt constraints (e.g., Xiaohongshu 100 character limit)
             if (!config.promptHint.isNullOrBlank()) {
-                append("⚠️ 重要提示: ${config.promptHint}\n\n")
+                append("⚠️ Important: ${config.promptHint}\n\n")
             }
 
             val typeLabel = when (app.type) {
-                ExecutionType.DELEGATION -> "🚀委托(快速)"
-                ExecutionType.GUI_AUTOMATION -> "🤖GUI自动化"
+                ExecutionType.DELEGATION -> "🚀Delegation(fast)"
+                ExecutionType.GUI_AUTOMATION -> "🤖GUI Automation"
             }
 
-            append("推荐应用: ${app.name} $typeLabel\n")
+            append("Recommended app: ${app.name} $typeLabel\n")
 
             if (app.type == ExecutionType.DELEGATION && app.deepLink != null) {
                 append("DeepLink: ${app.deepLink}\n")
             }
 
             if (!app.steps.isNullOrEmpty()) {
-                append("操作步骤: ${app.steps.joinToString(" → ")}\n")
+                append("Steps: ${app.steps.joinToString(" → ")}\n")
             }
 
             app.description?.let {
-                append("说明: $it\n")
+                append("Note: $it\n")
             }
 
-            append("\n建议：")
+            append("\nSuggestion: ")
             if (app.type == ExecutionType.DELEGATION) {
-                append("使用 DeepLink 直接打开 ${app.name}，可快速完成任务。")
+                append("Use DeepLink to open ${app.name} directly for faster task completion.")
             } else {
-                append("通过 GUI 自动化操作 ${app.name} 完成任务。")
+                append("Complete the task through GUI automation with ${app.name}.")
             }
         }
     }
@@ -267,7 +267,7 @@ $skillsInfo
         val app = match.app
         val params = match.params
 
-        println("[SkillManager] 执行: ${skill.config.name} -> ${app.name} (${app.type})")
+        println("[SkillManager] Executing: ${skill.config.name} -> ${app.name} (${app.type})")
 
         return when (app.type) {
             ExecutionType.DELEGATION -> {
@@ -293,8 +293,8 @@ $skillsInfo
 
         if (deepLink.isEmpty()) {
             return SkillResult.Failed(
-                error = "无法生成 DeepLink",
-                suggestion = "尝试使用 GUI 自动化方式"
+                error = "Unable to generate DeepLink",
+                suggestion = "Try using GUI automation instead"
             )
         }
 
@@ -309,11 +309,11 @@ $skillsInfo
             SkillResult.Delegated(
                 app = app,
                 deepLink = deepLink,
-                message = "已打开 ${app.name}"
+                message = "Opened ${app.name}"
             )
         } catch (e: Exception) {
-            // 如果指定包名失败，尝试不指定包名的方式
-            println("[SkillManager] 指定包名打开失败，尝试通用方式: ${e.message}")
+            // If opening with package name fails, try without specifying package
+            println("[SkillManager] Failed to open with package name, trying generic method: ${e.message}")
             try {
                 val fallbackIntent = Intent(Intent.ACTION_VIEW, Uri.parse(deepLink)).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -323,12 +323,12 @@ $skillsInfo
                 SkillResult.Delegated(
                     app = app,
                     deepLink = deepLink,
-                    message = "已打开 ${app.name}（通用方式）"
+                    message = "Opened ${app.name} (generic method)"
                 )
             } catch (e2: Exception) {
                 SkillResult.Failed(
-                    error = "打开 ${app.name} 失败: ${e2.message}",
-                    suggestion = "请确认应用已安装并支持 DeepLink"
+                    error = "Failed to open ${app.name}: ${e2.message}",
+                    suggestion = "Please confirm the app is installed and supports DeepLink"
                 )
             }
         }
@@ -353,7 +353,7 @@ $skillsInfo
 
         return SkillResult.NeedAutomation(
             plan = plan,
-            message = "需要通过 GUI 自动化操作 ${app.name}"
+            message = "GUI automation needed to operate ${app.name}"
         )
     }
 
@@ -385,46 +385,46 @@ $skillsInfo
         val matches = matchAllAvailableApps(query)
 
         if (matches.isEmpty()) {
-            return "未找到相关技能或可用应用，请使用通用 GUI 自动化完成任务。"
+            return "No matching skill or available app found. Please use general GUI automation to complete the task."
         }
 
         return buildString {
-            append("根据用户意图，匹配到以下可用方案：\n\n")
+            append("Based on user intent, matched the following options:\n\n")
 
-            // 按 Skill 分组
+            // Group by Skill
             val groupedBySkill = matches.groupBy { it.skill.config.id }
 
             for ((_, skillMatches) in groupedBySkill) {
                 val firstMatch = skillMatches.first()
                 val config = firstMatch.skill.config
 
-                append("【${config.name}】(置信度: ${(firstMatch.score * 100).toInt()}%)\n")
+                append("[${config.name}] (confidence: ${(firstMatch.score * 100).toInt()}%)\n")
 
                 for ((index, match) in skillMatches.withIndex()) {
                     val app = match.app
                     val typeLabel = when (app.type) {
-                        ExecutionType.DELEGATION -> "🚀委托(快速)"
-                        ExecutionType.GUI_AUTOMATION -> "🤖GUI自动化"
+                        ExecutionType.DELEGATION -> "🚀Delegation(fast)"
+                        ExecutionType.GUI_AUTOMATION -> "🤖GUI Automation"
                     }
 
-                    append("  ${index + 1}. ${app.name} $typeLabel (优先级: ${app.priority})\n")
+                    append("  ${index + 1}. ${app.name} $typeLabel (priority: ${app.priority})\n")
 
                     if (app.type == ExecutionType.DELEGATION && app.deepLink != null) {
                         append("     DeepLink: ${app.deepLink}\n")
                     }
 
                     if (!app.steps.isNullOrEmpty()) {
-                        append("     步骤: ${app.steps.joinToString(" → ")}\n")
+                        append("     Steps: ${app.steps.joinToString(" → ")}\n")
                     }
 
                     app.description?.let {
-                        append("     说明: $it\n")
+                        append("     Note: $it\n")
                     }
                 }
                 append("\n")
             }
 
-            append("建议：优先使用委托模式(🚀)，速度更快。如果委托失败再使用 GUI 自动化(🤖)。")
+            append("Suggestion: Prefer delegation mode (🚀) for faster execution. Use GUI automation (🤖) if delegation fails.")
         }
     }
 
@@ -495,7 +495,7 @@ $skillsInfo
         }
 
         fun getInstance(): SkillManager {
-            return instance ?: throw IllegalStateException("SkillManager 未初始化，请先调用 init()")
+            return instance ?: throw IllegalStateException("SkillManager not initialized, please call init() first")
         }
 
         fun isInitialized(): Boolean = instance != null

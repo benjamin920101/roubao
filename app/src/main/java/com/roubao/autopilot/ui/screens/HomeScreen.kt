@@ -47,12 +47,12 @@ data class PresetCommand(
 )
 
 val presetCommands = listOf(
-    PresetCommand("🍔", "点汉堡", "帮我点个附近好吃的汉堡"),
-    PresetCommand("📕", "发小红书", "帮我发一条小红书，内容是今日份好心情"),
-    PresetCommand("📺", "刷B站", "打开B站搜索肉包，找到第一个视频点个赞"),
-    PresetCommand("✈️", "旅游攻略", "用小美帮我查一下三亚旅游攻略"),
-    PresetCommand("🎵", "听音乐", "打开网易云音乐播放每日推荐"),
-    PresetCommand("🛒", "点外卖", "帮我在美团点一份猪脚饭")
+    PresetCommand("🍔", "Order Burger", "Order a delicious burger nearby"),
+    PresetCommand("📕", "Post to RED", "Post to Xiaohongshu: Having a great day"),
+    PresetCommand("📺", "Watch Bilibili", "Open Bilibili, search for Baozi, like the first video"),
+    PresetCommand("✈️", "Travel Guide", "Use Xiaomei to find Sanya travel tips"),
+    PresetCommand("🎵", "Play Music", "Open NetEase Music and play daily recommendations"),
+    PresetCommand("🛒", "Order Food", "Order pork trotter rice on Meituan")
 )
 
 @OptIn(androidx.compose.ui.ExperimentalComposeUiApi::class)
@@ -114,13 +114,13 @@ fun HomeScreen(
             ) {
                 Column {
                     Text(
-                        text = "肉包",
+                        text = "Baozi",
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
                         color = colors.primary
                     )
                     Text(
-                        text = if (shizukuAvailable) "准备就绪，告诉我你想做什么" else "请先连接 Shizuku",
+                        text = if (shizukuAvailable) "Ready. Tell me what you want to do" else "Please connect Shizuku first",
                         fontSize = 14.sp,
                         color = if (shizukuAvailable) colors.textSecondary else colors.error
                     )
@@ -136,7 +136,7 @@ fun HomeScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Refresh,
-                            contentDescription = "刷新 Shizuku 状态",
+                            contentDescription = "Refresh Shizuku status",
                             tint = colors.primary
                         )
                     }
@@ -214,7 +214,7 @@ fun PresetCommandsView(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "试试这些指令",
+            text = "Try these commands",
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
             color = colors.textSecondary,
@@ -367,7 +367,7 @@ fun ExecutingIndicator(currentStep: Int, currentModel: String = "") {
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            text = "正在执行 Step $currentStep",
+                            text = "Executing Step $currentStep",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
                             color = colors.primary
@@ -467,13 +467,13 @@ fun InputArea(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "停止",
+                        contentDescription = "Stop",
                         tint = Color.White,
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "停止执行",
+                        text = "Stop",
                         color = Color.White,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Medium
@@ -511,7 +511,7 @@ fun InputArea(
                                 Box {
                                     if (inputText.isEmpty()) {
                                         Text(
-                                            text = "告诉肉包你想做什么...",
+                                            text = "Tell Baozi what you want to do...",
                                             color = colors.textHint,
                                             fontSize = 15.sp
                                         )
@@ -521,9 +521,9 @@ fun InputArea(
                             }
                         )
                     } else {
-                        // Shizuku 未连接，显示提示文字
+                        // Shizuku not connected, show hint text
                         Text(
-                            text = "请先连接 Shizuku",
+                            text = "Please connect Shizuku first",
                             color = colors.textHint,
                             fontSize = 15.sp
                         )
@@ -546,7 +546,7 @@ fun InputArea(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Send,
-                        contentDescription = "发送",
+                        contentDescription = "Send",
                         tint = Color.White,
                         modifier = Modifier.size(24.dp)
                     )

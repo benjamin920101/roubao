@@ -38,26 +38,26 @@ data class OnboardingPage(
 val onboardingPages = listOf(
     OnboardingPage(
         icon = Icons.Outlined.Star,
-        title = "欢迎使用肉包",
-        description = "肉包是一个智能自动化助手，\n可以帮你操作手机完成各种任务",
+        title = "Welcome to Baozi",
+        description = "Baozi is an intelligent automation assistant\nthat helps you complete various tasks on your phone",
         iconColor = Color(0xFF6366F1) // Indigo
     ),
     OnboardingPage(
         icon = Icons.Outlined.Settings,
-        title = "AI 驱动",
-        description = "基于先进的视觉语言模型，\n肉包能够理解屏幕内容并做出智能决策",
+        title = "AI Powered",
+        description = "Based on advanced vision-language models,\nBaozi can understand screen content and make smart decisions",
         iconColor = Color(0xFF8B5CF6) // Violet
     ),
     OnboardingPage(
         icon = Icons.Outlined.Home,
-        title = "简单易用",
-        description = "只需用自然语言描述你想做的事，\n肉包会自动帮你完成",
+        title = "Easy to Use",
+        description = "Just describe what you want to do in natural language,\nand Baozi will automatically complete it for you",
         iconColor = Color(0xFF06B6D4) // Cyan
     ),
     OnboardingPage(
         icon = Icons.Filled.Lock,
-        title = "安全可靠",
-        description = "遇到敏感页面（如支付、密码）会自动停止，\n保护你的账户安全",
+        title = "Safe & Secure",
+        description = "Automatically stops on sensitive pages (like payment or passwords)\nto protect your account security",
         iconColor = Color(0xFF10B981) // Emerald
     )
 )
@@ -128,13 +128,13 @@ fun OnboardingScreen(
                     .padding(horizontal = 24.dp, vertical = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // 跳过按钮
+                // Skip button
                 TextButton(
                     onClick = onComplete,
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = "跳过",
+                        text = "Skip",
                         color = colors.textSecondary,
                         fontSize = 16.sp
                     )
@@ -142,7 +142,7 @@ fun OnboardingScreen(
 
                 Spacer(modifier = Modifier.width(16.dp))
 
-                // 下一步/开始按钮
+                // Next/Start button
                 Button(
                     onClick = {
                         if (pagerState.currentPage < onboardingPages.size - 1) {
@@ -162,7 +162,7 @@ fun OnboardingScreen(
                     )
                 ) {
                     Text(
-                        text = if (pagerState.currentPage < onboardingPages.size - 1) "下一步" else "开始使用",
+                        text = if (pagerState.currentPage < onboardingPages.size - 1) "Next" else "Get Started",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color.White
